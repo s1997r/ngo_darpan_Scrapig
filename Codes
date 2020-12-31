@@ -1,0 +1,47 @@
+#y = input('Enter link:')
+y = 'https://ngodarpan.gov.in/index.php/home/statewise_ngo/7856/7/58?per_page=100'
+import pandas as pd
+follow_loop = range(1, 101)
+alldetails=[]
+for x in follow_loop:
+    import selenium
+    from selenium import webdriver
+    from selenium.webdriver.common.keys import Keys
+    import os
+    import time
+    import csv
+    import re
+    import pandas as pd  
+    driver=webdriver.Chrome(executable_path=r"D:\chromedriver\chromedriver.exe") #Path to Chrome Driver
+    driver.get(y)
+    xpath = "/html/body/div[9]/div[1]/div[3]/div/div/div[2]/table/tbody/tr["
+    xpath += str(x)
+    xpath += "]/td[2]/a"
+    elem1 = driver.find_element_by_xpath(xpath).click()
+    time.sleep(5)
+    Unique_ID = driver.find_element_by_xpath('//*[@id="UniqueID"]').text
+    NGO_Name = driver.find_element_by_xpath('//*[@id="ngo_name_title"]').text
+    email_ID = driver.find_element_by_xpath('//*[@id="email_n"]').text
+    Contact=driver.find_element_by_xpath('//*[@id="mobile_n"]').text
+    City=driver.find_element_by_xpath('//*[@id="city"]').text
+    State=driver.find_element_by_xpath('//*[@id="state_p_ngo"]').text
+    Sector=driver.find_element_by_xpath('//*[@id="key_issues"]').text
+    website_URL=driver.find_element_by_xpath('//*[@id="ngo_web_url"]').text
+    reg= driver.find_element_by_xpath('//*[@id="ngo_regno"]').text
+
+    temp1={
+         "Unique_ID":Unique_ID,
+         "NGO_Name":NGO_Name,
+         "email_ID":email_ID,
+         "Contact":Contact,
+         "City":City,
+         "State":State,
+         "Sector":Sector,
+         "website_URL":website_URL,
+         "reg":reg,
+         "linklist":x}
+    alldetails.append(temp1)
+    driver.quit()
+
+df=pd.DataFrame(alldetails)
+df.to_excel (r'C:\Users\Shanu Rinkeshwar\Desktop\Ngo_Data\export_dataframe18.xlsx', index = False, header=True)
